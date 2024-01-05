@@ -229,6 +229,7 @@ On test tout d'abord de nous connecter en SSH à l'instance du vpc1, via son adr
 ssh -i "mysshprivatekey.pem" admin@44.197.189.87
 ```
 ![Alt text](image-2.png)
+
 Nous y avons bien accès.
 
 ## Rebonds
@@ -238,6 +239,7 @@ Depuis notre machine, via cette commande, nous allons nous connecter à le premi
 ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.2.1.61
 ```
 ![Alt text](image-3.png)
+
 Nous y avons bien accès.
 
 
@@ -293,7 +295,7 @@ Après cela, j'ai créé un fichier de politique pour accorder la lecture à tou
 
 ![Alt text](image-7.png)
 
-J'ai executé cette commande : 
+J'ai exécuté cette commande : 
 ```
 aws s3api put-bucket-policy --bucket tpfinalvince --policy file://public-read-policy.json
 ```
@@ -318,8 +320,6 @@ On a bien accès à notre site web :
 
 De retour sur notre instance présente dans le VPC1, on se rend ici : /var/www/html/
 
-
-
 On modifie le .html de base présent dans nginx, et on ajoute le lien de notre image présent dans notre bucket : 
 ![Alt text](image-12.png)
 
@@ -330,3 +330,6 @@ Il faut faire la commande ```sudo su``` pour avoir les droits de modifications.
 Ainsi, au travers du lien écrit dans le .html, on obtient bien, via notre instance comprenant nginx, une image qui est stockée dans notre bucket :
 
 ![Alt text](image-13.png)
+
+# Conclusion
+Ce projet a permis de mettre en oeuvre tout ce qu'on avait pu voir lors des différents cours/TP. Ce projet nous a aussi permis de réellement pratiquer en CloudShell, avec les différentes commandes que notre projet impliquaient. Néanmoins, il reste énormement de services et d'éléments à découvrir/étudier au sein d'AWS !
