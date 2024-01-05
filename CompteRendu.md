@@ -234,9 +234,12 @@ Nous y avons bien accès.
 
 ## Rebonds
 
-Depuis notre machine, via cette commande, nous allons nous connecter à le première instance, via Internet, et depuis celle-ci nous allons aller sur l'instance du vpc 2, via son ip privé :
+Depuis notre machine, via cette commande, nous allons nous connecter à le première instance, via Internet, et depuis celle-ci nous allons aller sur l'instance du vpc 2/vpc 3, via son ip privé :
 ```
 ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.2.1.61
+```
+```
+ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.1.1.81
 ```
 ![Alt text](image-3.png)
 
@@ -332,4 +335,4 @@ Ainsi, au travers du lien écrit dans le .html, on obtient bien, via notre insta
 ![Alt text](image-13.png)
 
 # Conclusion
-Ce projet a permis de mettre en oeuvre tout ce qu'on avait pu voir lors des différents cours/TP. Ce projet nous a aussi permis de réellement pratiquer en CloudShell, avec les différentes commandes que notre projet impliquaient. Néanmoins, il reste énormement de services et d'éléments à découvrir/étudier au sein d'AWS !
+Ce projet a permis de mettre en oeuvre tout ce qu'on avait pu voir lors des différents cours/TP. Celui-ci nous a aussi permis de réellement pratiquer en CloudShell, avec les différentes commandes que notre projet impliquaient. Néanmoins, il reste énormement de services et d'éléments à découvrir/étudier au sein d'AWS !
