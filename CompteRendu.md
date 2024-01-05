@@ -239,9 +239,10 @@ Depuis notre machine, via cette commande, nous allons nous connecter à le premi
 ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.2.1.61
 ```
 ```
-ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.1.1.81
+ssh -o ProxyCommand="ssh -W %h:%p -i mysshprivatekey.pem admin@44.197.189.87 " -i mysshprivatekey.pem admin@10.1.1.82
 ```
 ![Alt text](image-3.png)
+![Alt text](image-19.png)
 
 Nous y avons bien accès.
 
