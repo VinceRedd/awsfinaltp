@@ -1,6 +1,14 @@
-# Ma configuration AWS 
-## A titre informatif (et pour m'aider) :
+# Modélisation
 
+Afin de réaliser notre projet de manière efficace, nous avons tout d'abord mis au point cette modélisation qui nous permet d'obtenir une vue d'ensemble de l'architecture à établir :
+
+![Alt text](ModélisationInfra.jpg)
+
+_En cas de difficulté, vous pouvez ouvrir les fichiers images directement, celles-ci sont présentes dans le répertoire._
+
+# Ma configuration AWS 
+## A titre informatif :
+J'ai rassemblé diverses informations en-dessous afin de m'aider lors des différentes commandes à effectuer.
 ## VPCs
 | VPC Name | CIDR Block   | VPC ID               |
 |----------|--------------|----------------------|
@@ -97,11 +105,15 @@ aws ec2 create-route-table --vpc-id vpc-0e75708eeed5e3458 --query RouteTable.Rou
 
 aws ec2 create-tags --resources rtb-0151c08441d09941a --tags Key=Name,Value=routable-cli-3
 ```
+
+![Alt text](image-17.png)
+
 # On crée la route pour l'internet gateway
 Dans la table de routage de notre premier VPC, on crée une nouvelle route qui dirige tout le trafic sortant du VPC vers Internet via notre gateway précédement créée. 
 ```
 aws ec2 create-route --route-table-id rtb-05258ecdb0511cba4 --destination-cidr-block 0.0.0.0/0 --gateway-id igw-08c1d7d1ada1bdf05
 ```
+![Alt text](image-16.png)
 
 # Association des tables de routages
 On associe chaque table de routage à nos subnets respectifs.
@@ -114,6 +126,8 @@ aws ec2 associate-route-table --route-table-id rtb-0dbd1e866891b0631 --subnet-id
 ```
 aws ec2 associate-route-table --route-table-id rtb-0151c08441d09941a --subnet-id subnet-0bcb927cbda4a8f0f
 ```
+
+![Alt text](image-15.png)
 
 # Création des demandes de peerings entre VPC
 ### De VPC 1 à VPC 2 :
@@ -243,7 +257,7 @@ En se rendant sur notre serveur (ip public), on voit bien :
 
 ![Alt text](image-4.png)
 
-# S3
+# Bucket
 
 Dans CloudShell, on crée un bucket : 
 ```
@@ -256,6 +270,7 @@ aws s3 website s3://tpfinalvince/ --index-document index.html --error-document e
 Il faut ensuite appliquer une politique bucket pour autoriser l'accès public :
 
 Je crée un fichier .json avec cette politique : 
+
 ![Alt text](image-5.png)
 
 J'execute celle -ci :
@@ -267,14 +282,14 @@ aws s3api put-bucket-policy --bucket tpfinalvince --policy file://bucketpolicy.j
 J'obtiens malheureusement un Access Denied.
 
 
-J'ai alors essayé une autre solution :
+J'ai alors essayé une autre solution qui permet de gérer les ACL :
 ```
 
 aws s3api put-public-access-block \
 --bucket tpfinalvince \
 --public-access-block-configuration "BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false"
 ```
-Après cela, j'ai créer un fichier de politique pour accorder la lecture à tout le monde : 
+Après cela, j'ai créé un fichier de politique pour accorder la lecture à tout le monde : 
 
 ![Alt text](image-7.png)
 
@@ -297,18 +312,21 @@ aws s3 ls s3://tpfinalvince/
 
 On a bien accès à notre site web :
 
-![Alt text](image-10.png)
+![Alt text](image-18.png)
 
 ## Première instance (NGINX)
 
 De retour sur notre instance présente dans le VPC1, on se rend ici : /var/www/html/
 
-Il faut faire la commande ```sudo su``` pour avoir les droits de modifications.
+
 
 On modifie le .html de base présent dans nginx, et on ajoute le lien de notre image présent dans notre bucket : 
 ![Alt text](image-12.png)
+
+Il faut faire la commande ```sudo su``` pour avoir les droits de modifications.
+
 ![Alt text](image-14.png)
 
-On obtient bien, via notre instance comprenant nginx, une image qui est stockée dans notre bucket :
+Ainsi, au travers du lien écrit dans le .html, on obtient bien, via notre instance comprenant nginx, une image qui est stockée dans notre bucket :
 
 ![Alt text](image-13.png)
