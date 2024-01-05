@@ -316,7 +316,7 @@ On a bien accès à notre site web :
 
 ![Alt text](image-18.png)
 
-## Première instance (NGINX)
+## NGINX
 
 De retour sur notre instance présente dans le VPC1, on se rend ici : /var/www/html/
 
