@@ -1,32 +1,38 @@
-VPC 1 : 10.0.0.0/16
-vpc-02c53e8991377c7e7
-VPC 2 : 10.1.0.0/16
-vpc-047a530c9bf8125ca
-VPC 3 : 10.2.0.0/16
-vpc-0e75708eeed5e3458
+# Ma configuration AWS 
+## A titre informatif (et pour m'aider) :
 
+## VPCs
+| VPC Name | CIDR Block   | VPC ID               |
+|----------|--------------|----------------------|
+| VPC 1    | 10.0.0.0/16  | vpc-02c53e8991377c7e7|
+| VPC 2    | 10.1.0.0/16  | vpc-047a530c9bf8125ca|
+| VPC 3    | 10.2.0.0/16  | vpc-0e75708eeed5e3458|
 
+## Subnets
+| Subnet Name | CIDR Block   | Subnet ID            |
+|-------------|--------------|----------------------|
+| SUBNET 1    | 10.0.1.0/24  | subnet-00854d03dad056864|
+| SUBNET 2    | 10.1.1.0/24  | subnet-0dec1e62bb81e3de1|
+| SUBNET 3    | 10.2.1.0/24  | subnet-0bcb927cbda4a8f0f|
 
+## Internet Gateway
+| Resource           | InternetGateway ID  |
+|--------------------|---------------------|
+| Internet Gateway   | igw-08c1d7d1ada1bdf05|
 
-SUBNET 1 : 10.0.1.0/24
-subnet-00854d03dad056864
-SUBNET 2 : 10.1.1.0/24
-subnet-0dec1e62bb81e3de1
-SUBNET 3 : 10.2.1.0/24
-subnet-0bcb927cbda4a8f0f
+## Route Tables
+| Route Table Name | Route Table ID       |
+|------------------|----------------------|
+| RTB 1            | rtb-05258ecdb0511cba4|
+| RTB 2            | rtb-0dbd1e866891b0631|
+| RTB 3            | rtb-0151c08441d09941a|
 
-INTERNET GATEWAY
-igw-08c1d7d1ada1bdf05
-
-
-rtb-05258ecdb0511cba4
-rtb-0dbd1e866891b0631
-rtb-0151c08441d09941a
-
-
-rtbassoc-034c284268be787ff
-rtbassoc-055555f14342ead2c
-rtbassoc-0986f81ff8788364d
+## Route Table Associations
+| Association Name  | Association ID        |
+|-------------------|-----------------------|
+| RTB Assoc 1       | rtbassoc-034c284268be787ff|
+| RTB Assoc 2       | rtbassoc-055555f14342ead2c|
+| RTB Assoc 3       | rtbassoc-0986f81ff8788364d|
 
 
 # Création des VPC
@@ -49,14 +55,17 @@ aws ec2 create-tags --resources vpc-0e75708eeed5e3458 --tags Key=Name,Value=VPC3
 On crée un subnet pour chaque VPC, toujours avec un block CIDR correspondant, en indiquant la zone de disponibilité.
 ```
 aws ec2 create-subnet --vpc-id vpc-02c53e8991377c7e7 --cidr-block 10.0.1.0/24 --availability-zone us-east-1a --query Subnet.SubnetId --output text
+
 aws ec2 create-tags --resources subnet-00854d03dad056864 --tags Key=Name,Value=public-subnet-1
 ```
 ```
 aws ec2 create-subnet --vpc-id vpc-047a530c9bf8125ca --cidr-block 10.1.1.0/24 --availability-zone us-east-1a --query Subnet.SubnetId --output text
+
 aws ec2 create-tags --resources subnet-0dec1e62bb81e3de1 --tags Key=Name,Value=private-subnet-2
 ```
 ```
 aws ec2 create-subnet --vpc-id vpc-0e75708eeed5e3458 --cidr-block 10.2.1.0/24 --availability-zone us-east-1a --query Subnet.SubnetId --output text
+
 aws ec2 create-tags --resources subnet-0bcb927cbda4a8f0f --tags Key=Name,Value=private-subnet-3
 ```
 # Création de la gateway internet
@@ -229,11 +238,14 @@ sudo systemctl enable nginx
 
 sudo systemctl start nginx
 ```
+
+En se rendant sur notre serveur (ip public), on voit bien :
+
 ![Alt text](image-4.png)
 
 # S3
 
-On crée un bucket : 
+Dans CloudShell, on crée un bucket : 
 ```
 aws s3 mb s3://tpfinalvince
 ```
@@ -287,23 +299,16 @@ On a bien accès à notre site web :
 
 ![Alt text](image-10.png)
 
-
-
-
-
-![Alt text](image-12.png)
-
-
-## NGINX
+## Première instance (NGINX)
 
 De retour sur notre instance présente dans le VPC1, on se rend ici : /var/www/html/
 
-
+Il faut faire la commande ```sudo su``` pour avoir les droits de modifications.
 
 On modifie le .html de base présent dans nginx, et on ajoute le lien de notre image présent dans notre bucket : 
-
+![Alt text](image-12.png)
 ![Alt text](image-14.png)
 
-On obtient bien, via notre serveur nginx, une image qui est stockée dans notre bucket :
+On obtient bien, via notre instance comprenant nginx, une image qui est stockée dans notre bucket :
 
 ![Alt text](image-13.png)
